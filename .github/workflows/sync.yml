@@ -4,26 +4,26 @@ on:
   workflow_dispatch:
     inputs:
       source_image:
-        description: '1. 要搬运的源镜像全名 (例如: sweagent/swe-agent:latest)'
+        description: '1. 要搬运的源镜像全名 (例如: sweb.eval.x86_64.django_11099:latest)'
         required: true
-        default: 'sweagent/swe-agent:latest'
+        default: 'sweb.eval.x86_64.django_11099:latest'
       target_tag:
-        description: '2. 存入 envs 仓库的标签名 (随意起，例如: swe-agent-base)'
+        description: '2. 存入 envs 仓库的标签名 (例如: django_11099)'
         required: true
-        default: 'swe-agent-base'
+        default: 'django_11099'
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
       - name: 🔑 登录阿里云镜像服务
-        run: docker login registry.cn-hangzhou.aliyuncs.com --username="${{ secrets.ALIYUN_USERNAME }}" --password="${{ secrets.ALIYUN_PASSWORD }}"
+        run: docker login crpi-5umifqfyzo2kuqtp.cn-hangzhou.personal.cr.aliyuncs.com --username="${{ secrets.ALIYUN_USERNAME }}" --password="${{ secrets.ALIYUN_PASSWORD }}"
 
       - name: ⬇️ 在 GitHub 神仙网络下拉取镜像
         run: docker pull ${{ github.event.inputs.source_image }}
 
       - name: 🏷️ 狸猫换太子 (重新打标签)
-        run: docker tag ${{ github.event.inputs.source_image }} registry.cn-hangzhou.aliyuncs.com/zhaochenyu-swe/envs:${{ github.event.inputs.target_tag }}
+        run: docker tag ${{ github.event.inputs.source_image }} crpi-5umifqfyzo2kuqtp.cn-hangzhou.personal.cr.aliyuncs.com/zhaochenyu-swe/envs:${{ github.event.inputs.target_tag }}
 
       - name: ⬆️ 推送到国内阿里云
-        run: docker push registry.cn-hangzhou.aliyuncs.com/zhaochenyu-swe/envs:${{ github.event.inputs.target_tag }}
+        run: docker push crpi-5umifqfyzo2kuqtp.cn-hangzhou.personal.cr.aliyuncs.com/zhaochenyu-swe/envs:${{ github.event.inputs.target_tag }}
