@@ -1,4 +1,4 @@
-name: 🚀 光速搬运镜像到阿里云 (zhaochenyu-swe)
+name: 搬运镜像到阿里云 (zhaochenyu-swe)
 
 on:
   workflow_dispatch:
@@ -16,14 +16,14 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: 🔑 登录阿里云镜像服务
+      - name:  登录阿里云镜像服务
         run: docker login crpi-5umifqfyzo2kuqtp.cn-hangzhou.personal.cr.aliyuncs.com --username="${{ secrets.ALIYUN_USERNAME }}" --password="${{ secrets.ALIYUN_PASSWORD }}"
 
-      - name: ⬇️ 在 GitHub 神仙网络下拉取镜像
+      - name:  在 GitHub 网络下拉取镜像
         run: docker pull ${{ github.event.inputs.source_image }}
 
-      - name: 🏷️ 狸猫换太子 (重新打标签)
+      - name: (重新打标签)
         run: docker tag ${{ github.event.inputs.source_image }} crpi-5umifqfyzo2kuqtp.cn-hangzhou.personal.cr.aliyuncs.com/zhaochenyu-swe/envs:${{ github.event.inputs.target_tag }}
 
-      - name: ⬆️ 推送到国内阿里云
+      - name: 推送到国内阿里云
         run: docker push crpi-5umifqfyzo2kuqtp.cn-hangzhou.personal.cr.aliyuncs.com/zhaochenyu-swe/envs:${{ github.event.inputs.target_tag }}
